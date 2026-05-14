@@ -1,0 +1,17 @@
+NYC Yellow Taxi 2024 Raw Data Quality Summary
+==================================================
+
+Total rows: 41169720
+Total columns: 19
+Raw dataset size MB: 660.9
+Rows with abnormal pickup or drop-off timestamp: 56
+Zero or negative passenger count: 401354
+Zero or negative trip distance: 776305
+Negative fare amount: 731024
+Zero fare amount: 17260
+Negative tip amount: 1331
+Negative total amount: 609344
+Zero total amount: 5062
+Zero or negative trip duration: 13510
+Trip duration over 3 hours: 25349
+Trip duration over 6 hours: 22023

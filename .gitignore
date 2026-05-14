@@ -1,0 +1,20 @@
+# ── Large data files (download with data_ingestion.py) ─────────────────────────
+data/raw/
+data/processed/
+
+# ── Generated model artifacts (produced by running the notebook) ────────────────
+outputs/model_results/lr_pipeline_model/
+
+# ── Python cache ───────────────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*.pyo
+.ipynb_checkpoints/
+
+# ── Jupyter runtime ────────────────────────────────────────────────────────────
+*.log
+
+# ── OS files ───────────────────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+desktop.ini
