@@ -1,0 +1,9 @@
+NYC Yellow Taxi Fare Prediction - Linear Regression Results
+============================================================
+
+Training rows: 28480061
+Testing rows: 7122154
+
+MAE: 2.1607
+RMSE: 5.9255
+R² Score: 0.8934

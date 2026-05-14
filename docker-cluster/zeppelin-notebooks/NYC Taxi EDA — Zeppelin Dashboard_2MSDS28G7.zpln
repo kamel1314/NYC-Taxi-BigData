@@ -1,0 +1,840 @@
+{
+  "paragraphs": [
+    {
+      "text": "%md\n# NYC Yellow Taxi 2024 — EDA Dashboard\n**Course:** CSCI461 Introduction to Big Data (Spring 2026)  \n**Tool:** Apache Zeppelin 0.10.1 — Visualization / Reporting  \n**Data source:** HDFS — `hdfs://namenode:9000/taxi/raw/`  \n**Dataset:** 35,602,215 rows × 25 columns (after preprocessing)",
+      "user": "anonymous",
+      "dateUpdated": "2026-05-14 02:10:30.574",
+      "progress": 0,
+      "config": {
+        "tableHide": false,
+        "editorSetting": {
+          "language": "markdown",
+          "editOnDblClick": true,
+          "completionSupport": false
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/markdown",
+        "fontSize": 9.0,
+        "results": [
+          {
+            "graph": {
+              "mode": "table",
+              "height": 120.0,
+              "optionOpen": false
+            }
+          }
+        ],
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "\u003cdiv class\u003d\"markdown-body\"\u003e\n\u003ch1\u003eNYC Yellow Taxi 2024 — EDA Dashboard\u003c/h1\u003e\n\u003cp\u003e\u003cstrong\u003eCourse:\u003c/strong\u003e CSCI461 Introduction to Big Data (Spring 2026)\u003cbr /\u003e\n\u003cstrong\u003eTool:\u003c/strong\u003e Apache Zeppelin 0.10.1 — Visualization / Reporting\u003cbr /\u003e\n\u003cstrong\u003eData source:\u003c/strong\u003e HDFS — \u003ccode\u003ehdfs://namenode:9000/taxi/raw/\u003c/code\u003e\u003cbr /\u003e\n\u003cstrong\u003eDataset:\u003c/strong\u003e 35,602,215 rows × 25 columns (after preprocessing)\u003c/p\u003e\n\n\u003c/div\u003e"
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1778723277611_2009615098",
+      "id": "paragraph_001",
+      "dateCreated": "2026-05-14 01:47:57.611",
+      "dateStarted": "2026-05-14 02:10:30.597",
+      "dateFinished": "2026-05-14 02:10:30.635",
+      "status": "FINISHED"
+    },
+    {
+      "text": "%pyspark\n# ── 1. Initialise SparkSession and load data from HDFS ────────────────────────\nfrom pyspark.sql import SparkSession\nfrom pyspark.sql.functions import col, count, avg, round, desc, month, hour\n\nspark \u003d SparkSession.builder \\\n    .appName(\"NYC Taxi EDA — Zeppelin\") \\\n    .config(\"spark.executor.memory\", \"2g\") \\\n    .getOrCreate()\n\nHDFS_PATH \u003d \"hdfs://namenode:9000/taxi/processed\"\ndf \u003d spark.read.parquet(HDFS_PATH)\n\nprint(f\"Rows loaded from HDFS : {df.count():,}\")\nprint(f\"Columns               : {len(df.columns)}\")\nprint(f\"Schema:\")\ndf.printSchema()",
+      "user": "anonymous",
+      "dateUpdated": "2026-05-14 02:10:30.694",
+      "progress": 92,
+      "config": {
+        "tableHide": false,
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/python",
+        "fontSize": 9.0,
+        "results": [
+          {
+            "graph": {
+              "mode": "table",
+              "height": 300.0,
+              "optionOpen": false
+            }
+          }
+        ],
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "Rows loaded from HDFS : 35,602,215\nColumns               : 25\nSchema:\nroot\n |-- VendorID: integer (nullable \u003d true)\n |-- tpep_pickup_datetime: timestamp (nullable \u003d true)\n |-- tpep_dropoff_datetime: timestamp (nullable \u003d true)\n |-- passenger_count: long (nullable \u003d true)\n |-- trip_distance: double (nullable \u003d true)\n |-- RatecodeID: long (nullable \u003d true)\n |-- store_and_fwd_flag: string (nullable \u003d true)\n |-- PULocationID: integer (nullable \u003d true)\n |-- DOLocationID: integer (nullable \u003d true)\n |-- payment_type: long (nullable \u003d true)\n |-- fare_amount: double (nullable \u003d true)\n |-- extra: double (nullable \u003d true)\n |-- mta_tax: double (nullable \u003d true)\n |-- tip_amount: double (nullable \u003d true)\n |-- tolls_amount: double (nullable \u003d true)\n |-- improvement_surcharge: double (nullable \u003d true)\n |-- total_amount: double (nullable \u003d true)\n |-- congestion_surcharge: double (nullable \u003d true)\n |-- Airport_fee: double (nullable \u003d true)\n |-- trip_duration_minutes: double (nullable \u003d true)\n |-- pickup_hour: integer (nullable \u003d true)\n |-- pickup_day: integer (nullable \u003d true)\n |-- pickup_month: integer (nullable \u003d true)\n |-- is_weekend: integer (nullable \u003d true)\n |-- fare_per_mile: double (nullable \u003d true)\n\n"
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {
+        "jobUrl": {
+          "propertyName": "jobUrl",
+          "label": "SPARK JOB",
+          "tooltip": "View in Spark web UI",
+          "group": "spark",
+          "values": [
+            {
+              "jobUrl": "http://8768181fc0ee:4040/jobs/job?id\u003d10"
+            },
+            {
+              "jobUrl": "http://8768181fc0ee:4040/jobs/job?id\u003d11"
+            }
+          ],
+          "interpreterSettingId": "spark"
+        }
+      },
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1778723277611_1389600568",
+      "id": "paragraph_002",
+      "dateCreated": "2026-05-14 01:47:57.612",
+      "dateStarted": "2026-05-14 02:10:30.728",
+      "dateFinished": "2026-05-14 02:10:31.297",
+      "status": "FINISHED"
+    },
+    {
+      "text": "%pyspark\n# ── 2. Trips and Average Fare by Pickup Hour ─────────────────────────────────\n# Switch to Bar Chart view in Zeppelin to visualise this table\nfrom pyspark.sql.functions import hour as spark_hour\n\ntrips_by_hour \u003d df \\\n    .withColumn(\"pickup_hour\", spark_hour(col(\"tpep_pickup_datetime\"))) \\\n    .groupBy(\"pickup_hour\") \\\n    .agg(\n        count(\"*\").alias(\"trip_count\"),\n        round(avg(\"fare_amount\"), 2).alias(\"avg_fare\")\n    ) \\\n    .orderBy(\"pickup_hour\")\n\nz.show(trips_by_hour)",
+      "user": "anonymous",
+      "dateUpdated": "2026-05-14 02:31:28.403",
+      "progress": 0,
+      "config": {
+        "tableHide": false,
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/python",
+        "fontSize": 9.0,
+        "results": [
+          {
+            "graph": {
+              "mode": "multiBarChart",
+              "height": 350.0,
+              "optionOpen": true,
+              "setting": {
+                "barchart": {
+                  "rotate": {
+                    "degree": "-45"
+                  },
+                  "xLabelStatus": "rotate"
+                },
+                "table": {
+                  "tableGridState": {},
+                  "tableColumnTypeState": {
+                    "names": {
+                      "pickup_hour": "string",
+                      "trip_count": "string",
+                      "avg_fare": "string"
+                    },
+                    "updated": false
+                  },
+                  "tableOptionSpecHash": "[{\"name\":\"useFilter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable filter for columns\"},{\"name\":\"showPagination\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable pagination for better navigation\"},{\"name\":\"showAggregationFooter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable a footer for displaying aggregated values\"}]",
+                  "tableOptionValue": {
+                    "useFilter": false,
+                    "showPagination": false,
+                    "showAggregationFooter": false
+                  },
+                  "updated": false,
+                  "initialized": false
+                },
+                "multiBarChart": {
+                  "rotate": {
+                    "degree": "-45"
+                  },
+                  "xLabelStatus": "default"
+                },
+                "stackedAreaChart": {
+                  "rotate": {
+                    "degree": "-45"
+                  },
+                  "xLabelStatus": "default"
+                },
+                "lineChart": {
+                  "rotate": {
+                    "degree": "-45"
+                  },
+                  "xLabelStatus": "default"
+                }
+              },
+              "keys": [
+                {
+                  "name": "pickup_hour",
+                  "index": 0.0,
+                  "aggr": "sum"
+                }
+              ],
+              "values": [
+                {
+                  "name": "trip_count",
+                  "index": 1.0,
+                  "aggr": "sum"
+                }
+              ],
+              "groups": [],
+              "commonSetting": {}
+            },
+            "helium": {}
+          }
+        ],
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TABLE",
+            "data": "pickup_hour\ttrip_count\tavg_fare\n0\t953970\t20.3\n1\t622853\t18.07\n2\t405575\t16.57\n3\t259835\t17.58\n4\t166718\t23.82\n5\t195984\t28.51\n6\t458308\t23.13\n7\t926663\t19.53\n8\t1301064\t18.57\n9\t1507627\t18.64\n10\t1663010\t19.03\n11\t1805941\t19.29\n12\t1959633\t19.72\n13\t2031948\t20.45\n14\t2181772\t21.24\n15\t2248894\t21.22\n16\t2282320\t21.29\n17\t2454967\t19.73\n18\t2555714\t18.44\n19\t2253277\t18.59\n20\t2043413\t18.96\n21\t2066837\t19.04\n22\t1857893\t19.65\n23\t1397999\t20.95\n"
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {
+        "jobUrl": {
+          "propertyName": "jobUrl",
+          "label": "SPARK JOB",
+          "tooltip": "View in Spark web UI",
+          "group": "spark",
+          "values": [
+            {
+              "jobUrl": "http://8768181fc0ee:4040/jobs/job?id\u003d17"
+            }
+          ],
+          "interpreterSettingId": "spark"
+        }
+      },
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1778723277612_1715997977",
+      "id": "paragraph_003",
+      "dateCreated": "2026-05-14 01:47:57.612",
+      "dateStarted": "2026-05-14 02:15:20.651",
+      "dateFinished": "2026-05-14 02:15:22.430",
+      "status": "FINISHED"
+    },
+    {
+      "text": "%pyspark\n# ── 3. Monthly Trip Volume and Average Fare ───────────────────────────────────\n# Switch to Bar Chart view — keys: pickup_month, values: trip_count or avg_fare\nfrom pyspark.sql.functions import month as spark_month\n\nmonthly_stats \u003d df \\\n    .withColumn(\"pickup_month\", spark_month(col(\"tpep_pickup_datetime\"))) \\\n    .groupBy(\"pickup_month\") \\\n    .agg(\n        count(\"*\").alias(\"trip_count\"),\n        round(avg(\"fare_amount\"), 2).alias(\"avg_fare\"),\n        round(avg(\"trip_distance\"), 2).alias(\"avg_distance\")\n    ) \\\n    .orderBy(\"pickup_month\")\n\nz.show(monthly_stats)",
+      "user": "anonymous",
+      "dateUpdated": "2026-05-14 02:32:53.197",
+      "progress": 0,
+      "config": {
+        "tableHide": false,
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/python",
+        "fontSize": 9.0,
+        "results": [
+          {
+            "graph": {
+              "mode": "multiBarChart",
+              "height": 350.0,
+              "keys": [],
+              "values": [
+                {
+                  "name": "trip_count",
+                  "index": 1.0,
+                  "aggr": "sum"
+                }
+              ],
+              "groups": [],
+              "optionOpen": true,
+              "setting": {
+                "table": {
+                  "tableGridState": {},
+                  "tableColumnTypeState": {
+                    "names": {
+                      "pickup_month": "string",
+                      "trip_count": "string",
+                      "avg_fare": "string",
+                      "avg_distance": "string"
+                    },
+                    "updated": false
+                  },
+                  "tableOptionSpecHash": "[{\"name\":\"useFilter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable filter for columns\"},{\"name\":\"showPagination\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable pagination for better navigation\"},{\"name\":\"showAggregationFooter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable a footer for displaying aggregated values\"}]",
+                  "tableOptionValue": {
+                    "useFilter": false,
+                    "showPagination": false,
+                    "showAggregationFooter": false
+                  },
+                  "updated": false,
+                  "initialized": false
+                },
+                "multiBarChart": {
+                  "rotate": {
+                    "degree": "-45"
+                  },
+                  "xLabelStatus": "default"
+                },
+                "stackedAreaChart": {
+                  "rotate": {
+                    "degree": "-45"
+                  },
+                  "xLabelStatus": "default"
+                }
+              },
+              "commonSetting": {}
+            },
+            "helium": {}
+          }
+        ],
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TABLE",
+            "data": "pickup_month\ttrip_count\tavg_fare\tavg_distance\n1\t2721754\t18.43\t3.29\n2\t2717714\t18.37\t3.22\n3\t3033901\t19.14\t3.38\n4\t2985524\t19.45\t3.42\n5\t3190457\t19.98\t3.45\n6\t3004418\t19.81\t3.45\n7\t2681165\t20.2\t3.63\n8\t2601792\t20.41\t3.7\n9\t3022612\t20.72\t3.57\n10\t3300304\t20.41\t3.49\n11\t3144622\t19.65\t3.33\n12\t3197952\t20.19\t3.32\n"
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {
+        "jobUrl": {
+          "propertyName": "jobUrl",
+          "label": "SPARK JOB",
+          "tooltip": "View in Spark web UI",
+          "group": "spark",
+          "values": [
+            {
+              "jobUrl": "http://8768181fc0ee:4040/jobs/job?id\u003d19"
+            }
+          ],
+          "interpreterSettingId": "spark"
+        }
+      },
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1778723277612_514248169",
+      "id": "paragraph_004",
+      "dateCreated": "2026-05-14 01:47:57.612",
+      "dateStarted": "2026-05-14 02:19:15.877",
+      "dateFinished": "2026-05-14 02:19:17.852",
+      "status": "FINISHED"
+    },
+    {
+      "text": "%pyspark\n# ── 4. Fare Distribution by Payment Type ─────────────────────────────────────\n# payment_type: 1\u003dCredit Card, 2\u003dCash, 3\u003dNo Charge, 4\u003dDispute, 5\u003dUnknown\n# Switch to Pie Chart view to see payment method breakdown\n\npayment_map \u003d {1: \"Credit Card\", 2: \"Cash\", 3: \"No Charge\", 4: \"Dispute\", 5: \"Unknown\", 6: \"Voided\"}\n\nfrom pyspark.sql.functions import when\n\npayment_stats \u003d df \\\n    .withColumn(\"payment_label\",\n        when(col(\"payment_type\") \u003d\u003d 1, \"Credit Card\")\n        .when(col(\"payment_type\") \u003d\u003d 2, \"Cash\")\n        .when(col(\"payment_type\") \u003d\u003d 3, \"No Charge\")\n        .when(col(\"payment_type\") \u003d\u003d 4, \"Dispute\")\n        .otherwise(\"Other\")\n    ) \\\n    .groupBy(\"payment_label\") \\\n    .agg(\n        count(\"*\").alias(\"trip_count\"),\n        round(avg(\"fare_amount\"), 2).alias(\"avg_fare\")\n    ) \\\n    .orderBy(desc(\"trip_count\"))\n\nz.show(payment_stats)",
+      "user": "anonymous",
+      "dateUpdated": "2026-05-14 02:33:28.566",
+      "progress": 0,
+      "config": {
+        "tableHide": false,
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/python",
+        "fontSize": 9.0,
+        "results": [
+          {
+            "graph": {
+              "mode": "multiBarChart",
+              "height": 350.0,
+              "keys": [
+                {
+                  "name": "payment_label",
+                  "index": 0.0,
+                  "aggr": "sum"
+                }
+              ],
+              "values": [
+                {
+                  "name": "trip_count",
+                  "index": 1.0,
+                  "aggr": "sum"
+                }
+              ],
+              "groups": [],
+              "optionOpen": true,
+              "setting": {
+                "table": {
+                  "tableGridState": {},
+                  "tableColumnTypeState": {
+                    "names": {
+                      "payment_label": "string",
+                      "trip_count": "string",
+                      "avg_fare": "string"
+                    },
+                    "updated": false
+                  },
+                  "tableOptionSpecHash": "[{\"name\":\"useFilter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable filter for columns\"},{\"name\":\"showPagination\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable pagination for better navigation\"},{\"name\":\"showAggregationFooter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable a footer for displaying aggregated values\"}]",
+                  "tableOptionValue": {
+                    "useFilter": false,
+                    "showPagination": false,
+                    "showAggregationFooter": false
+                  },
+                  "updated": false,
+                  "initialized": false
+                },
+                "multiBarChart": {
+                  "rotate": {
+                    "degree": "-45"
+                  },
+                  "xLabelStatus": "default"
+                },
+                "stackedAreaChart": {
+                  "rotate": {
+                    "degree": "-45"
+                  },
+                  "xLabelStatus": "default"
+                },
+                "lineChart": {
+                  "rotate": {
+                    "degree": "-45"
+                  },
+                  "xLabelStatus": "default"
+                }
+              },
+              "commonSetting": {}
+            },
+            "helium": {}
+          }
+        ],
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TABLE",
+            "data": "payment_label\ttrip_count\tavg_fare\nCredit Card\t29856622\t19.75\nCash\t5211908\t19.58\nDispute\t384128\t22.14\nNo Charge\t149557\t19.78\n"
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {
+        "jobUrl": {
+          "propertyName": "jobUrl",
+          "label": "SPARK JOB",
+          "tooltip": "View in Spark web UI",
+          "group": "spark",
+          "values": [
+            {
+              "jobUrl": "http://8768181fc0ee:4040/jobs/job?id\u003d20"
+            }
+          ],
+          "interpreterSettingId": "spark"
+        }
+      },
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1778723277612_1720502798",
+      "id": "paragraph_005",
+      "dateCreated": "2026-05-14 01:47:57.612",
+      "dateStarted": "2026-05-14 02:20:03.735",
+      "dateFinished": "2026-05-14 02:20:04.739",
+      "status": "FINISHED"
+    },
+    {
+      "text": "%pyspark\n# ── 5. Top 10 Busiest Pickup Locations ───────────────────────────────────────\n# Switch to Bar Chart — keys: PULocationID, values: trip_count\n\ntop_locations \u003d df \\\n    .groupBy(\"PULocationID\") \\\n    .agg(\n        count(\"*\").alias(\"trip_count\"),\n        round(avg(\"fare_amount\"), 2).alias(\"avg_fare\")\n    ) \\\n    .orderBy(desc(\"trip_count\")) \\\n    .limit(10)\n\nz.show(top_locations)",
+      "user": "anonymous",
+      "dateUpdated": "2026-05-14 02:27:48.731",
+      "progress": 1,
+      "config": {
+        "tableHide": false,
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/python",
+        "fontSize": 9.0,
+        "results": [
+          {
+            "graph": {
+              "mode": "multiBarChart",
+              "height": 350.0,
+              "keys": [
+                {
+                  "name": "PULocationID",
+                  "index": 0.0,
+                  "aggr": "sum"
+                }
+              ],
+              "values": [
+                {
+                  "name": "trip_count",
+                  "index": 1.0,
+                  "aggr": "sum"
+                }
+              ],
+              "groups": [],
+              "optionOpen": true,
+              "setting": {
+                "table": {
+                  "tableGridState": {},
+                  "tableColumnTypeState": {
+                    "names": {
+                      "PULocationID": "string",
+                      "trip_count": "string",
+                      "avg_fare": "string"
+                    },
+                    "updated": false
+                  },
+                  "tableOptionSpecHash": "[{\"name\":\"useFilter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable filter for columns\"},{\"name\":\"showPagination\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable pagination for better navigation\"},{\"name\":\"showAggregationFooter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable a footer for displaying aggregated values\"}]",
+                  "tableOptionValue": {
+                    "useFilter": false,
+                    "showPagination": false,
+                    "showAggregationFooter": false
+                  },
+                  "updated": false,
+                  "initialized": false
+                },
+                "multiBarChart": {
+                  "rotate": {
+                    "degree": "-45"
+                  },
+                  "xLabelStatus": "default"
+                }
+              },
+              "commonSetting": {}
+            },
+            "helium": {}
+          }
+        ],
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TABLE",
+            "data": "PULocationID\ttrip_count\tavg_fare\n132\t1854148\t64.19\n237\t1765979\t13.06\n161\t1736638\t16.65\n236\t1557001\t13.37\n162\t1309258\t16.13\n186\t1268633\t17.38\n230\t1249756\t19.73\n138\t1244354\t44.15\n142\t1182020\t14.34\n163\t1062656\t16.73\n"
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {
+        "jobUrl": {
+          "propertyName": "jobUrl",
+          "label": "SPARK JOB",
+          "tooltip": "View in Spark web UI",
+          "group": "spark",
+          "values": [
+            {
+              "jobUrl": "http://8768181fc0ee:4040/jobs/job?id\u003d21"
+            }
+          ],
+          "interpreterSettingId": "spark"
+        }
+      },
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1778723277612_2132119112",
+      "id": "paragraph_006",
+      "dateCreated": "2026-05-14 01:47:57.612",
+      "dateStarted": "2026-05-14 02:20:35.223",
+      "dateFinished": "2026-05-14 02:20:36.482",
+      "status": "FINISHED"
+    },
+    {
+      "text": "%pyspark\n# ── 6. Weekend vs Weekday — Trip Count and Average Fare ───────────────────────\n# Switch to Bar Chart — keys: day_type, values: trip_count or avg_fare\nfrom pyspark.sql.functions import dayofweek\n\nweekend_stats \u003d df \\\n    .withColumn(\"pickup_day\", dayofweek(col(\"tpep_pickup_datetime\"))) \\\n    .withColumn(\"day_type\",\n        when(col(\"pickup_day\").isin([1, 7]), \"Weekend\")\n        .otherwise(\"Weekday\")\n    ) \\\n    .groupBy(\"day_type\") \\\n    .agg(\n        count(\"*\").alias(\"trip_count\"),\n        round(avg(\"fare_amount\"), 2).alias(\"avg_fare\"),\n        round(avg(\"trip_distance\"), 2).alias(\"avg_distance\")\n    ) \\\n    .orderBy(\"day_type\")\n\nz.show(weekend_stats)\nprint(\"\\nKey insight: Weekend trips tend to have higher fares due to longer night-time rides.\")",
+      "user": "anonymous",
+      "dateUpdated": "2026-05-14 02:34:03.014",
+      "progress": 0,
+      "config": {
+        "tableHide": false,
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/python",
+        "fontSize": 9.0,
+        "results": [
+          {
+            "graph": {
+              "mode": "multiBarChart",
+              "height": 300.0,
+              "keys": [
+                {
+                  "name": "day_type",
+                  "index": 0.0,
+                  "aggr": "sum"
+                }
+              ],
+              "values": [
+                {
+                  "name": "avg_fare",
+                  "index": 2.0,
+                  "aggr": "sum"
+                }
+              ],
+              "groups": [],
+              "optionOpen": true,
+              "setting": {
+                "table": {
+                  "tableGridState": {},
+                  "tableColumnTypeState": {
+                    "names": {
+                      "day_type": "string",
+                      "trip_count": "string",
+                      "avg_fare": "string",
+                      "avg_distance": "string"
+                    },
+                    "updated": false
+                  },
+                  "tableOptionSpecHash": "[{\"name\":\"useFilter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable filter for columns\"},{\"name\":\"showPagination\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable pagination for better navigation\"},{\"name\":\"showAggregationFooter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable a footer for displaying aggregated values\"}]",
+                  "tableOptionValue": {
+                    "useFilter": false,
+                    "showPagination": false,
+                    "showAggregationFooter": false
+                  },
+                  "updated": false,
+                  "initialized": false
+                },
+                "multiBarChart": {
+                  "rotate": {
+                    "degree": "-45"
+                  },
+                  "xLabelStatus": "default"
+                },
+                "stackedAreaChart": {
+                  "rotate": {
+                    "degree": "-45"
+                  },
+                  "xLabelStatus": "default"
+                }
+              },
+              "commonSetting": {}
+            },
+            "helium": {}
+          }
+        ],
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TABLE",
+            "data": "day_type\ttrip_count\tavg_fare\tavg_distance\nWeekday\t25969582\t19.81\t3.41\nWeekend\t9632633\t19.59\t3.5\n"
+          },
+          {
+            "type": "TEXT",
+            "data": "\n\nKey insight: Weekend trips tend to have higher fares due to longer night-time rides.\n"
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {
+        "jobUrl": {
+          "propertyName": "jobUrl",
+          "label": "SPARK JOB",
+          "tooltip": "View in Spark web UI",
+          "group": "spark",
+          "values": [
+            {
+              "jobUrl": "http://8768181fc0ee:4040/jobs/job?id\u003d22"
+            }
+          ],
+          "interpreterSettingId": "spark"
+        }
+      },
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1778723277612_2110454260",
+      "id": "paragraph_007",
+      "dateCreated": "2026-05-14 01:47:57.612",
+      "dateStarted": "2026-05-14 02:21:07.434",
+      "dateFinished": "2026-05-14 02:21:09.405",
+      "status": "FINISHED"
+    },
+    {
+      "text": "%md\n## Summary\n\n| Visualisation | Chart Type | Key Finding |\n|---|---|---|\n| Trips by hour | Bar chart | Peak demand at 6 PM (2,555,714 trips); lowest at 4 AM |\n| Monthly stats | Bar chart | Highest fares in September ($20.72 avg) |\n| Payment type | Pie chart | Credit card dominates (~68% of trips) |\n| Top locations | Bar chart | Location IDs 132, 161, 237 are busiest |\n| Weekend vs Weekday | Bar chart | Weekdays have more trips; weekends have higher avg fares |\n\n**Data source:** `hdfs://namenode:9000/taxi/raw/`  \n**Visualization tool:** Apache Zeppelin 0.10.1",
+      "user": "anonymous",
+      "dateUpdated": "2026-05-14 02:10:40.969",
+      "progress": 0,
+      "config": {
+        "tableHide": false,
+        "editorSetting": {
+          "language": "markdown",
+          "editOnDblClick": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/markdown",
+        "fontSize": 9.0,
+        "editorHide": true,
+        "results": [
+          {
+            "graph": {
+              "mode": "table",
+              "height": 200.0,
+              "optionOpen": false
+            }
+          }
+        ],
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "\u003cdiv class\u003d\"markdown-body\"\u003e\n\u003ch2\u003eSummary\u003c/h2\u003e\n\u003ctable\u003e\n\u003cthead\u003e\n\u003ctr\u003e\u003cth\u003eVisualisation\u003c/th\u003e\u003cth\u003eChart Type\u003c/th\u003e\u003cth\u003eKey Finding\u003c/th\u003e\u003c/tr\u003e\n\u003c/thead\u003e\n\u003ctbody\u003e\n\u003ctr\u003e\u003ctd\u003eTrips by hour\u003c/td\u003e\u003ctd\u003eBar chart\u003c/td\u003e\u003ctd\u003ePeak demand at 6 PM (2,555,714 trips); lowest at 4 AM\u003c/td\u003e\u003c/tr\u003e\n\u003ctr\u003e\u003ctd\u003eMonthly stats\u003c/td\u003e\u003ctd\u003eBar chart\u003c/td\u003e\u003ctd\u003eHighest fares in September ($20.72 avg)\u003c/td\u003e\u003c/tr\u003e\n\u003ctr\u003e\u003ctd\u003ePayment type\u003c/td\u003e\u003ctd\u003ePie chart\u003c/td\u003e\u003ctd\u003eCredit card dominates (~68% of trips)\u003c/td\u003e\u003c/tr\u003e\n\u003ctr\u003e\u003ctd\u003eTop locations\u003c/td\u003e\u003ctd\u003eBar chart\u003c/td\u003e\u003ctd\u003eLocation IDs 132, 161, 237 are busiest\u003c/td\u003e\u003c/tr\u003e\n\u003ctr\u003e\u003ctd\u003eWeekend vs Weekday\u003c/td\u003e\u003ctd\u003eBar chart\u003c/td\u003e\u003ctd\u003eWeekdays have more trips; weekends have higher avg fares\u003c/td\u003e\u003c/tr\u003e\n\u003c/tbody\u003e\n\u003c/table\u003e\n\u003cp\u003e\u003cstrong\u003eData source:\u003c/strong\u003e \u003ccode\u003ehdfs://namenode:9000/taxi/raw/\u003c/code\u003e\u003cbr /\u003e\n\u003cstrong\u003eVisualization tool:\u003c/strong\u003e Apache Zeppelin 0.10.1\u003c/p\u003e\n\n\u003c/div\u003e"
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1778723277613_1272764685",
+      "id": "paragraph_008",
+      "dateCreated": "2026-05-14 01:47:57.613",
+      "dateStarted": "2026-05-14 02:10:41.001",
+      "dateFinished": "2026-05-14 02:10:41.042",
+      "status": "FINISHED"
+    },
+    {
+      "text": "%md\n",
+      "user": "anonymous",
+      "dateUpdated": "2026-05-14 02:10:41.100",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "\u003cdiv class\u003d\"markdown-body\"\u003e\n\n\u003c/div\u003e"
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1778724227656_30438879",
+      "id": "paragraph_1778724227656_30438879",
+      "dateCreated": "2026-05-14 02:03:47.664",
+      "dateStarted": "2026-05-14 02:10:41.118",
+      "dateFinished": "2026-05-14 02:10:41.131",
+      "status": "FINISHED"
+    },
+    {
+      "text": "%md\n",
+      "user": "anonymous",
+      "dateUpdated": "2026-05-14 02:10:41.283",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "markdown",
+          "editOnDblClick": true,
+          "completionKey": "TAB",
+          "completionSupport": false
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/markdown",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "\u003cdiv class\u003d\"markdown-body\"\u003e\n\n\u003c/div\u003e"
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1778724235338_1781065176",
+      "id": "paragraph_1778724235338_1781065176",
+      "dateCreated": "2026-05-14 02:03:55.339",
+      "dateStarted": "2026-05-14 02:10:41.313",
+      "dateFinished": "2026-05-14 02:10:41.327",
+      "status": "FINISHED"
+    }
+  ],
+  "name": "NYC Taxi EDA — Zeppelin Dashboard",
+  "id": "2MSDS28G7",
+  "defaultInterpreterGroup": "spark",
+  "version": "0.10.1",
+  "noteParams": {},
+  "noteForms": {},
+  "angularObjects": {},
+  "config": {
+    "isZeppelinNotebookCronEnable": false
+  },
+  "info": {
+    "isRunning": false
+  }
+}

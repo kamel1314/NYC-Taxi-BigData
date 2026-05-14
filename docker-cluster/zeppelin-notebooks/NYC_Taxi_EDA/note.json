@@ -1,0 +1,258 @@
+{
+  "paragraphs": [
+    {
+      "text": "%md\n# NYC Yellow Taxi 2024 — EDA Dashboard\n**Course:** CSCI461 Introduction to Big Data (Spring 2026)  \n**Tool:** Apache Zeppelin 0.10.1 — Visualization / Reporting  \n**Data source:** HDFS — `hdfs://namenode:9000/taxi/raw/`  \n**Dataset:** 35,602,215 rows × 25 columns (after preprocessing)",
+      "user": "anonymous",
+      "dateUpdated": "2026-05-14 00:00:00.000",
+      "progress": 0,
+      "config": {
+        "tableHide": false,
+        "editorSetting": { "language": "markdown", "editOnDblClick": true },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/markdown",
+        "fontSize": 9.0,
+        "results": [{ "graph": { "mode": "table", "height": 120 } }],
+        "enabled": true
+      },
+      "settings": { "params": {}, "forms": {} },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_001",
+      "id": "paragraph_001",
+      "dateCreated": "2026-05-14T00:00:00+0000",
+      "status": "READY"
+    },
+    {
+      "text": "%pyspark\n# ── 1. Initialise SparkSession and load data from HDFS ────────────────────────\nfrom pyspark.sql import SparkSession\nfrom pyspark.sql.functions import col, count, avg, round, desc, month, hour\n\nspark = SparkSession.builder \\\n    .appName(\"NYC Taxi EDA — Zeppelin\") \\\n    .config(\"spark.executor.memory\", \"2g\") \\\n    .getOrCreate()\n\nHDFS_PATH = \"hdfs://namenode:9000/taxi/raw\"\ndf = spark.read.parquet(HDFS_PATH)\n\nprint(f\"Rows loaded from HDFS : {df.count():,}\")\nprint(f\"Columns               : {len(df.columns)}\")\nprint(f\"Schema:\")\ndf.printSchema()",
+      "user": "anonymous",
+      "dateUpdated": "2026-05-14 00:00:00.000",
+      "progress": 0,
+      "config": {
+        "tableHide": false,
+        "editorSetting": { "language": "python", "editOnDblClick": false },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/python",
+        "fontSize": 9.0,
+        "results": [{ "graph": { "mode": "table", "height": 300 } }],
+        "enabled": true
+      },
+      "settings": { "params": {}, "forms": {} },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_002",
+      "id": "paragraph_002",
+      "dateCreated": "2026-05-14T00:00:00+0000",
+      "status": "READY"
+    },
+    {
+      "text": "%pyspark\n# ── 2. Trips and Average Fare by Pickup Hour ─────────────────────────────────\n# Switch to Bar Chart view in Zeppelin to visualise this table\nfrom pyspark.sql.functions import hour as spark_hour\n\ntrips_by_hour = df \\\n    .withColumn(\"pickup_hour\", spark_hour(col(\"tpep_pickup_datetime\"))) \\\n    .groupBy(\"pickup_hour\") \\\n    .agg(\n        count(\"*\").alias(\"trip_count\"),\n        round(avg(\"fare_amount\"), 2).alias(\"avg_fare\")\n    ) \\\n    .orderBy(\"pickup_hour\")\n\ntrips_by_hour.show(24, truncate=False)",
+      "user": "anonymous",
+      "dateUpdated": "2026-05-14 00:00:00.000",
+      "progress": 0,
+      "config": {
+        "tableHide": false,
+        "editorSetting": { "language": "python", "editOnDblClick": false },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/python",
+        "fontSize": 9.0,
+        "results": [
+          {
+            "graph": {
+              "mode": "barchart",
+              "height": 350,
+              "optionOpen": false,
+              "setting": {
+                "barchart": {
+                  "rotate": { "degree": "-45" },
+                  "xLabelStatus": "rotate"
+                }
+              },
+              "keys": [{ "name": "pickup_hour", "index": 0, "aggr": "sum" }],
+              "values": [{ "name": "trip_count", "index": 1, "aggr": "sum" }],
+              "groups": []
+            }
+          }
+        ],
+        "enabled": true
+      },
+      "settings": { "params": {}, "forms": {} },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_003",
+      "id": "paragraph_003",
+      "dateCreated": "2026-05-14T00:00:00+0000",
+      "status": "READY"
+    },
+    {
+      "text": "%pyspark\n# ── 3. Monthly Trip Volume and Average Fare ───────────────────────────────────\n# Switch to Bar Chart view — keys: pickup_month, values: trip_count or avg_fare\nfrom pyspark.sql.functions import month as spark_month\n\nmonthly_stats = df \\\n    .withColumn(\"pickup_month\", spark_month(col(\"tpep_pickup_datetime\"))) \\\n    .groupBy(\"pickup_month\") \\\n    .agg(\n        count(\"*\").alias(\"trip_count\"),\n        round(avg(\"fare_amount\"), 2).alias(\"avg_fare\"),\n        round(avg(\"trip_distance\"), 2).alias(\"avg_distance\")\n    ) \\\n    .orderBy(\"pickup_month\")\n\nmonthly_stats.show(12, truncate=False)",
+      "user": "anonymous",
+      "dateUpdated": "2026-05-14 00:00:00.000",
+      "progress": 0,
+      "config": {
+        "tableHide": false,
+        "editorSetting": { "language": "python", "editOnDblClick": false },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/python",
+        "fontSize": 9.0,
+        "results": [
+          {
+            "graph": {
+              "mode": "barchart",
+              "height": 350,
+              "keys": [{ "name": "pickup_month", "index": 0, "aggr": "sum" }],
+              "values": [{ "name": "trip_count", "index": 1, "aggr": "sum" }],
+              "groups": []
+            }
+          }
+        ],
+        "enabled": true
+      },
+      "settings": { "params": {}, "forms": {} },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_004",
+      "id": "paragraph_004",
+      "dateCreated": "2026-05-14T00:00:00+0000",
+      "status": "READY"
+    },
+    {
+      "text": "%pyspark\n# ── 4. Fare Distribution by Payment Type ─────────────────────────────────────\n# payment_type: 1=Credit Card, 2=Cash, 3=No Charge, 4=Dispute, 5=Unknown\n# Switch to Pie Chart view to see payment method breakdown\n\npayment_map = {1: \"Credit Card\", 2: \"Cash\", 3: \"No Charge\", 4: \"Dispute\", 5: \"Unknown\", 6: \"Voided\"}\n\nfrom pyspark.sql.functions import when\n\npayment_stats = df \\\n    .withColumn(\"payment_label\",\n        when(col(\"payment_type\") == 1, \"Credit Card\")\n        .when(col(\"payment_type\") == 2, \"Cash\")\n        .when(col(\"payment_type\") == 3, \"No Charge\")\n        .when(col(\"payment_type\") == 4, \"Dispute\")\n        .otherwise(\"Other\")\n    ) \\\n    .groupBy(\"payment_label\") \\\n    .agg(\n        count(\"*\").alias(\"trip_count\"),\n        round(avg(\"fare_amount\"), 2).alias(\"avg_fare\")\n    ) \\\n    .orderBy(desc(\"trip_count\"))\n\npayment_stats.show(truncate=False)",
+      "user": "anonymous",
+      "dateUpdated": "2026-05-14 00:00:00.000",
+      "progress": 0,
+      "config": {
+        "tableHide": false,
+        "editorSetting": { "language": "python", "editOnDblClick": false },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/python",
+        "fontSize": 9.0,
+        "results": [
+          {
+            "graph": {
+              "mode": "piechart",
+              "height": 350,
+              "keys": [{ "name": "payment_label", "index": 0, "aggr": "sum" }],
+              "values": [{ "name": "trip_count", "index": 1, "aggr": "sum" }],
+              "groups": []
+            }
+          }
+        ],
+        "enabled": true
+      },
+      "settings": { "params": {}, "forms": {} },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_005",
+      "id": "paragraph_005",
+      "dateCreated": "2026-05-14T00:00:00+0000",
+      "status": "READY"
+    },
+    {
+      "text": "%pyspark\n# ── 5. Top 10 Busiest Pickup Locations ───────────────────────────────────────\n# Switch to Bar Chart — keys: PULocationID, values: trip_count\n\ntop_locations = df \\\n    .groupBy(\"PULocationID\") \\\n    .agg(\n        count(\"*\").alias(\"trip_count\"),\n        round(avg(\"fare_amount\"), 2).alias(\"avg_fare\")\n    ) \\\n    .orderBy(desc(\"trip_count\")) \\\n    .limit(10)\n\ntop_locations.show(truncate=False)",
+      "user": "anonymous",
+      "dateUpdated": "2026-05-14 00:00:00.000",
+      "progress": 0,
+      "config": {
+        "tableHide": false,
+        "editorSetting": { "language": "python", "editOnDblClick": false },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/python",
+        "fontSize": 9.0,
+        "results": [
+          {
+            "graph": {
+              "mode": "barchart",
+              "height": 350,
+              "keys": [{ "name": "PULocationID", "index": 0, "aggr": "sum" }],
+              "values": [{ "name": "trip_count", "index": 1, "aggr": "sum" }],
+              "groups": []
+            }
+          }
+        ],
+        "enabled": true
+      },
+      "settings": { "params": {}, "forms": {} },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_006",
+      "id": "paragraph_006",
+      "dateCreated": "2026-05-14T00:00:00+0000",
+      "status": "READY"
+    },
+    {
+      "text": "%pyspark\n# ── 6. Weekend vs Weekday — Trip Count and Average Fare ───────────────────────\n# Switch to Bar Chart — keys: day_type, values: trip_count or avg_fare\nfrom pyspark.sql.functions import dayofweek\n\nweekend_stats = df \\\n    .withColumn(\"pickup_day\", dayofweek(col(\"tpep_pickup_datetime\"))) \\\n    .withColumn(\"day_type\",\n        when(col(\"pickup_day\").isin([1, 7]), \"Weekend\")\n        .otherwise(\"Weekday\")\n    ) \\\n    .groupBy(\"day_type\") \\\n    .agg(\n        count(\"*\").alias(\"trip_count\"),\n        round(avg(\"fare_amount\"), 2).alias(\"avg_fare\"),\n        round(avg(\"trip_distance\"), 2).alias(\"avg_distance\")\n    ) \\\n    .orderBy(\"day_type\")\n\nweekend_stats.show(truncate=False)\n\nprint(\"\\nKey insight: Weekend trips tend to have higher fares due to longer night-time rides.\")",
+      "user": "anonymous",
+      "dateUpdated": "2026-05-14 00:00:00.000",
+      "progress": 0,
+      "config": {
+        "tableHide": false,
+        "editorSetting": { "language": "python", "editOnDblClick": false },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/python",
+        "fontSize": 9.0,
+        "results": [
+          {
+            "graph": {
+              "mode": "barchart",
+              "height": 300,
+              "keys": [{ "name": "day_type", "index": 0, "aggr": "sum" }],
+              "values": [{ "name": "avg_fare", "index": 2, "aggr": "sum" }],
+              "groups": []
+            }
+          }
+        ],
+        "enabled": true
+      },
+      "settings": { "params": {}, "forms": {} },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_007",
+      "id": "paragraph_007",
+      "dateCreated": "2026-05-14T00:00:00+0000",
+      "status": "READY"
+    },
+    {
+      "text": "%md\n## Summary\n\n| Visualisation | Chart Type | Key Finding |\n|---|---|---|\n| Trips by hour | Bar chart | Peak demand at 6 PM (2,555,714 trips); lowest at 4 AM |\n| Monthly stats | Bar chart | Highest fares in September ($20.72 avg) |\n| Payment type | Pie chart | Credit card dominates (~68% of trips) |\n| Top locations | Bar chart | Location IDs 132, 161, 237 are busiest |\n| Weekend vs Weekday | Bar chart | Weekdays have more trips; weekends have higher avg fares |\n\n**Data source:** `hdfs://namenode:9000/taxi/raw/`  \n**Visualization tool:** Apache Zeppelin 0.10.1",
+      "user": "anonymous",
+      "dateUpdated": "2026-05-14 00:00:00.000",
+      "progress": 0,
+      "config": {
+        "tableHide": false,
+        "editorSetting": { "language": "markdown", "editOnDblClick": true },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/markdown",
+        "fontSize": 9.0,
+        "results": [{ "graph": { "mode": "table", "height": 200 } }],
+        "enabled": true
+      },
+      "settings": { "params": {}, "forms": {} },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_008",
+      "id": "paragraph_008",
+      "dateCreated": "2026-05-14T00:00:00+0000",
+      "status": "READY"
+    }
+  ],
+  "name": "NYC Taxi EDA — Zeppelin Dashboard",
+  "id": "NYC_TAXI_EDA_2024",
+  "defaultInterpreterGroup": "spark",
+  "version": "0.10.1",
+  "noteParams": {},
+  "noteForms": {},
+  "angularObjects": {},
+  "config": {
+    "isZeppelinNotebookCronEnable": false,
+    "looknfeel": "default",
+    "personalizedMode": "false"
+  },
+  "info": {}
+}
